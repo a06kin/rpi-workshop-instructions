@@ -71,27 +71,54 @@
           <div id="step2" class="panel-collapse collapse">
             <div class="panel-body">
               <p>We need to customize the image we just downloaded, install programs and configure the system for our needs.</p>
-              <p>For this, no need to install the image on the Pi yet. By using a machine emulator, we can fake a Raspberry Pi on our laptop, install our image there, and do all the configuration we need. We'll use a machine emulator called <a href="http://www.qemu.org">QEMU</a>. You also need a RPI Linux kernel compiled for QEMU, which you can get <a href="http://xecdesign.com/downloads/linux-qemu/kernel-qemu">here</a>. Now, run this to install QEMU :</p>
+              <p>For this, no need to install the image on the Pi yet. By using a machine emulator, we can fake a Raspberry Pi on our laptop, install our image there, and do all the configuration we need. We'll use a machine emulator called <a href="http://www.qemu.org">QEMU</a>. You also need a RPI Linux kernel compiled for QEMU, which you can get <a href="http://xecdesign.com/downloads/linux-qemu/kernel-qemu">here</a>.</p>
+
+              <p class="mac">Download <a href="https://github.com/osxfuse/osxfuse">OSXFUSE</a>. When installing, check the Compatibility Layer with MACFUSE (old version of OSXFUSE) option.</p>
+
+              <p class="mac">Download <a href="http://sourceforge.net/projects/fuse-ext2/">FUSE-EXT2</a> binary. Install it and unmount the OSXFUSE and FUSE-EXT2 installation drives.</p>
+
+              <p class="mac">Edit the FUSE-EXT2 auto mount script for read-write mounting. Open <b>/System/Library/Filesystems/fuse-ext2.fs/fuse-ext2.util</b> and around line 207 (in function Mount ()) you will find the line</p>
+              <pre class="mac"><code>OPTIONS="auto_xattr,defer_permissions"</code></pre>
+              <p class="mac">Change that line to:</p>
+              <pre class="mac"><code>OPTIONS="auto_xattr,defer_permissions,rw+"</code></pre>
+              <p class="mac">Save file, restart Terminal and navigate to your RPi workshop directory. Run:</p>
+              <pre class="mac"><code>sudo hdiutil mount your-rpi-image.img</code></pre>
+              <p class="mac">You should see something like this:</p>
+              <pre class="mac"><code>/dev/disk1         FDisk_partition_scheme          
+/dev/disk1s1        Windows_FAT_32        /Volumes/boot
+/dev/disk1s2        Linux                 /Volumes/Untitled</code></pre>
+              <p class="mac">Navigate to the mounted Linux partition:</p>
+              <pre class="mac"><code>cd /Volumes/Untitled</code></pre>
+              <p class="mac">Run:</p>
+              <pre class="mac"><code>sudo nano etc/ld.so.preload</code></pre>
+              <p class="mac">Comment out the only line there so it looks like this:</p>
+              <pre class=""><code>#/usr/lib/arm-linux-gnueabihf/libcofi_rpi.so</code></pre>
+              <p class="">Press Ctrl+X <span class="mac">(Not Cmd+X) </span>to save file and exit.</p>
+
+              <p class="mac">Before installing QEMU, make sure that you have <a href="http://www.macports.org">MACPORTS</a>. MACPORTS depend on XCode Command Line Tools that depend on XCode. To get XCode, go to <a href="https://developer.apple.com">Apple Developer</a> website or use App Store application. XCode Command Line tools are only available through Apple Developer website.</p>
+
+              <p>Now, do this to install QEMU:</p>
+
               <pre class="ubuntu"><code>sudo apt-get install qemu-system</code></pre>
               <pre class="mac"><code>sudo port install qemu +target_arm</code></pre>
 
-              <p>Now, we need to launch it and run our image. First, execute :</p>
-              <pre class=""><code>file your-raspbian.img</code></pre>
+              <p class="ubuntu">Now, we need to launch it and run our image. First, execute:</p>
+              <pre class="ubuntu"><code>file your-raspbian.img</code></pre>
 
-              <p class="">From the output of this command, take the partition 2 'startsector' value and multiply by 512, and use this figure as the offset value in the mount command below.</p>
-              <pre class=""><code>sudo mount your-raspbian.img -o offset=62914560 /mnt
+              <p class="ubuntu">From the output of this command, take the partition 2 'startsector' value and multiply by 512, and use this figure as the offset value in the mount command below.</p>
+              <pre class="ubuntu"><code>sudo mount your-raspbian.img -o offset=62914560 /mnt
 nano /mnt/etc/ld.so.preload
 </code></pre>
                 
-              <p>Comment out the line in the file and save. Then unmount the image.</p>
-              <pre class=""><code>sudo umount your-raspbian.img</code></pre>
-              
-              <p>Then, you can start QEMU with your image</p>
-              <pre class=""><code>qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
+              <p class="ubuntu">Comment out the line in the file and save. Then unmount the image.</p>
+              <pre class="ubuntu"><code>sudo umount your-raspbian.img</code></pre>
 
-              <p>If it says that running fsck failed, just run</p>
-              <pre class=""><code>fsck /dev/sda2</code></pre>
-              <p>and restart the emulator when done.</p>
+              <p>Then, you can start QEMU with your image:</p>
+              <pre class=""><code><span class="mac">sudo </span>qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
+
+              <p class="ubuntu">If it says that running fsck failed, just run</p>
+              <pre class="ubuntu"><code>fsck /dev/sda2</code></pre>
+              <p class="ubuntu">and restart the emulator when done.</p>
 
               <p>Because this is the first time we start the image on a machine, you will be prompted with a menu allowing you to configure some options. Don't forget to change your password, and to change the keyboard layout.</p>
 
@@ -100,6 +127,7 @@ nano /mnt/etc/ld.so.preload
                 <ul>
                   <li><a href="http://www.raspberrypi.org/phpBB3/viewtopic.php?f=29&t=37386">http://www.raspberrypi.org/phpBB3/viewtopic.php?f=29&t=37386</a></li>
                   <li><a href="http://xecdesign.com/">http://xecdesign.com/</a></li>
+                  <li class="mac"><a href="http://www.thewireframecommunity.com/node/174">http://www.thewireframecommunity.com/node/174</a></li>
                 </ul>
               </p>
             </div>
