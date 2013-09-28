@@ -464,7 +464,70 @@ pd -send ";deviceNum 4" -nogui -audiooutdev 3 controllercheck.pd</code></pre>
               </p>
             </div>
           </div>
-        </div>
+        </div><!-- END panel -->
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stepN">
+                <span class="stepIndex">N</span> Startup up your Raspberry Pi
+              </a>
+            </h2>
+          </div>
+          <div id="stepN" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>Insert the SD card into the SD card slot of the Raspberry Pi, connect it to the local with an ethernet wire and power it up by connecting the power cable.</p>
+
+              <div class="ubuntu">
+                <p>We will need to do two things remotely:</p>
+                <ol>
+                  <li>Run commands on the Raspberry Pi;</li>
+                  <li>Upload files.</li>
+                </ol>
+
+                <p>To run commands we will need to establish a SSH (Secure Shell) connection between our desktop computer and the Raspberry Pi. To do that, open Terminal and execute the following command:</p>
+
+                <pre><code>ssh pi@<strong>192.168.0.201</strong></code></pre>
+
+                <p>Please note that you have to replace the <strong>192.168.0.201</strong> with the IP address of your Raspberry Pi.</p>
+
+                <!-- To Seb: replace this with your weapon of choice -->
+                <p>We will use <a href="https://filezilla-project.org/download.php">FileZilla</a> for uploading files. Download and install it. When creating a new connection, you should specify <b>SFTP</b> as the Protocol.</p>
+              </div> <!-- SSH ubuntu -->
+
+              <div class="mac">
+                <p>We will need to do two things remotely:</p>
+                <ol>
+                  <li>Run commands on the Raspberry Pi;</li>
+                  <li>Upload files.</li>
+                </ol>
+
+                <p>To run commands we will need to establish a SSH (Secure Shell) connection between our desktop computer and the Raspberry Pi. To do that, open Terminal and execute the following command:</p>
+
+                <pre><code>ssh pi@<strong>192.168.0.201</strong></code></pre>
+
+                <p>Please note that you have to replace the <strong>192.168.0.201</strong> with the IP address of your Raspberry Pi.</p>
+
+                <p>We will use <a href="https://filezilla-project.org/download.php">FileZilla</a> for uploading files. Download and install it. When creating a new connection, you should specify <b>SFTP</b> as the Protocol.</p>
+              </div> <!-- SSH mac -->
+
+              <div class="win">
+                <p>We will need to do two things remotely:</p>
+                <ol>
+                  <li>Run commands on the Raspberry Pi;</li>
+                  <li>Upload files.</li>
+                </ol>
+                
+                <p>To run commands we will need to establish a SSH (Secure Shell) connection between our desktop computer and the Raspberry Pi. Download <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">PuTTY</a> for Windows for doing that.</p>
+
+                <p>To upload files we will use a tool that supports the SCP file transfer protocol. In the case of Windows there is <a href="http://winscp.net/eng/download.php">WinSCP</a>.</p>
+
+                <p>In both programs you will need to enter the IP address of the Raspberry Pi, it's username (most probably it is 'pi') and password (if you have not changed it in the previous steps, it might be 'raspberry').</p>
+              </div> <!-- SSH win -->
+  
+            </div>
+          </div>
+        </div><!-- END panel -->
 
       </div>
 
