@@ -590,6 +590,95 @@ tar vxfz of_v0.8.0_linuxarmv6l_release.tar.gz -C openFrameworks --strip-componen
           </div>
         </div> <!-- END panel -->
 
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stepN4">
+                <span class="stepIndex">N4</span> Setup and compile openFrameworks
+              </a>
+            </h2>
+          </div>
+          <div id="stepN4" class="panel-collapse collapse">
+            <div class="panel-body">
+              
+              <p>We need to make sure that we have all necessary packages to compile openFrameworks. To do that, run these commands:</p>
+
+
+              <pre><code>cd /home/pi/openFrameworks/scripts/linux/debian_armv6l
+sudo ./install_dependencies.sh</code></pre>
+
+              <p>This will take some time, but when ready, run the following command to start compiling openFrameworks itself:</p>
+
+              <pre><code>make Release -C /home/pi/openFrameworks/libs/openFrameworksCompiled/project</code></pre>
+
+              <p>The compiling process should take about an hour. It is possible that you encounter an error containing:</p>
+
+              <pre><code>../../../libs/openFrameworks/app/ofAppEGLWindow.cpp:1073:66: error: cannot convert 'VC_IMAGE_TRANSFORM_T' to 'DISPMANX_TRANSFORM_T'</code></pre>
+
+              <p>To solve that, run this:</p>
+
+              <pre><code>sed -i 's/VC_IMAGE_TRANSFORM_T/DISPMANX_TRANSFORM_T/g' /home/pi/openFrameworks/libs/openFrameworks/app/ofAppEGLWindow.cpp</code></pre>
+
+              <p>Run the <b>make</b> command again if necessary.</p>
+
+              <p>When complete, navigate to the <b>/home/pi/openFrameworks/examples</b> directory to see the available examples there. Choose one, e.g. polygonExample, enter it's directory by using <b>cd polygonExample</b> and execute the followig:</p>
+
+              <pre><code>make
+make run</code></pre>
+
+              <p>The <b>make</b> command will compile the project, the <b>make run</b> - execute it. A screen should be connected to the RPi to see the output.</p>
+
+              <p class="references">
+                Reference <a href="http://www.openframeworks.cc/setup/raspberrypi/Raspberry-Pi-Getting-Started.html">http://www.openframeworks.cc/setup/raspberrypi/Raspberry-Pi-Getting-Started.html</a>
+              </p>
+
+            </div>
+          </div>
+        </div> <!-- END panel -->
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stepN5">
+                <span class="stepIndex">N5</span> openFrameworks desktop Setup
+              </a>
+            </h2>
+          </div>
+          <div id="stepN5" class="panel-collapse collapse">
+            <div class="panel-body">
+              
+              <p>While openFrameworks is compiling on the Raspberry Pi, make sure that your desktop computer installation of openFrameworks works as expected as we will use our desktop machines for developing and testing our apps mainly.</p>
+
+              <div class="mac">
+                <p>To use openFrameworks on Mac OSX, you have to make sure that you have XCode installed. If not, open the App Store application and search for XCode there or go to <a href="https://developer.apple.com">Apple Developer</a> web site, log in and download XCode from there.</p>
+
+                <p>Download <a href="http://www.openframeworks.cc/download/">openFrameworks</a> 0.8.0 for Mac OSX.</p>
+              </div> <!-- OF Desktop MAC -->
+              
+              <div class="win">
+                <p>To use openFrameworks on Windows, you have to set up a development environment. We will install <a href="http://www.codeblocks.org/downloads/binaries">CodeBlocks</a> (with MinGW), but if you have a Microsoft Visual Studio licence, you can use it as well.</p>
+
+                <p>You will also need <a href="http://www.openframeworks.cc/content/files/codeblocks_additions.zip">Additions to CodeBlocks to work with openFrameworks</a>. You will need to add files to your CodeBlocks installation <b>include</b> and <b>lib</b> directories.</p>
+
+                <p>Download <a href="http://www.openframeworks.cc/download/">openFrameworks</a> 0.8.0 for Windows.</p>
+
+                <p>Unzip it to as safe location and go to <b>libs/openFrameworksCompiled/project/win_cb</b> directory and open the <b>openFrameworks.cbp</b> file. It should open in the CodeBlocks environment. Press the <b>Build</b> button. Do it for both - <b>debug</b> and <b>release</b> - targets</p>
+
+                <p>To test the openFrameworks installation, try to open and compile one of the example projects in the <b>openFrameworks/examples</b> directory. Open the <b>.workspace</b> project file, choose target in the CodeBlocks IDE and press <b>Build and Run.</b></p>
+
+
+              </div> <!-- OF Desktop WIN -->
+              
+
+              <p class="references">
+                Reference <a href="http://www.openframeworks.cc/">http://www.openframeworks.cc</a>
+              </p>
+
+
+            </div>
+          </div>
+        </div> <!-- END panel -->
+
       </div>
 
     </div>
