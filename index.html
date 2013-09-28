@@ -113,7 +113,7 @@ nano /mnt/etc/ld.so.preload
               <p class="ubuntu">Comment out the line in the file and save. Then unmount the image.</p>
               <pre class="ubuntu"><code>sudo umount your-raspbian.img</code></pre>
 
-              <p>Then, you can start QEMU with your image:</p>
+              <p>Make sure that you are in workshop working directory, then, you can start QEMU with your image:</p>
               <pre class=""><code><span class="mac">sudo </span>qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
 
               <p class="ubuntu">If it says that running fsck failed, just run</p>
