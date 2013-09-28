@@ -74,7 +74,61 @@
               <p>For this, no need to install the image on the Pi yet. By using a machine emulator, we can fake a Raspberry Pi on our laptop, install our image there, and do all the configuration we need. We'll use a machine emulator called <a href="http://www.qemu.org">QEMU</a>. You also need a RPI Linux kernel compiled for QEMU, which you can get <a href="http://xecdesign.com/downloads/linux-qemu/kernel-qemu">here</a>.</p>
 
               <div class="win">
-                <p>Windooze instructions...</p>
+                <p>To configure our RPi image on Windows, we will need the following:</p>
+                <ul>
+                  <li><a href="http://downloads.raspberrypi.org/raspbian_latest">Raspbian Linux</a> image file</li>
+                  <li><a href="http://xecdesign.com/downloads/linux-qemu/kernel-qemu">Linux kernel</a> for Qemu</li>
+                  <li><a href="http://lassauge.free.fr/qemu/release/Qemu-1.6.0-windows.zip">Qemu</a> or Quick Emulator software for Windows. </li>
+                </ul>
+                <p>Create a working directory, e.g. <strong>C:\qemu</strong>. Unzip the Raspbian zip file and place the contents of it in <strong>C:\qemu</strong>. Move the kernel-qemu file to the same location. Unzip <strong>Qemu-1.6.0-windows.zip</strong> to <strong>C:\qemu</strong> as well</p>
+
+                <p>We will need to create two .bat files in the <strong>C:\qemu</strong> directory:</p>
+                <ol>
+                <li><strong>rpi_setup.bat</strong> for setting up the image file so it can be emulated using Qemu;</li>
+                <li><strong>rpi_start.bat</strong> for emulating and doing the rest of the setup we need.</li>
+                </ol>
+                <p>Let's start with adding content to the <strong>rpi_setup.bat</strong> file. Add the following:</p>
+                <pre><code>qemu-system-armw -kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 init=/bin/sh panic=1" -hda <strong>2013-09-25-wheezy-raspbian.img</strong></code></pre>
+                
+                <p>Note the <strong>2013-09-25-wheezy-raspbian.img</strong> part - change the filename to whatever your raspbian image file name is. Remember to save changes.</p>
+                
+                <p>Open the <strong>rpi_start.bat</strong> file. Add the same, except <strong>init=/bin/sh</strong>. It should look like this now:</p>
+
+                <pre><code>qemu-system-armw -kernel kernel-qemu -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda 2013-09-25-wheezy-raspbian.img</code></pre>
+
+                <p>Save file and doubleclick on the <strong>rpi_setup.bat</strong>. A new window should open with a booting Linux system in it.</p>
+
+                <p>Note: if the emulator fails to run:</p>
+
+                <ol>
+                  <li>Check if the path to your Raspbian image file is correct;</li>
+                  <li>It might be necessary to add the <strong>C:\qemu</strong> location to Windows Path variable.</li>
+                </ol>
+
+                <p>Now you should see a plain and simple Linux shell in the emulator window. Execute these commands one by one there:</p>
+
+                <pre><code>mount / -o remount,rw
+echo > /etc/ld.so.preload
+mount / -o remount,ro
+exit</code></pre>
+                
+                <p>Enter these commands exactly as writen above or you will fail. The shell is very sensitive. This will remove all contents from the <strong>/etc/ld.so.preload</strong> file. Close the emulator window. Now the Raspbian .img file is ready to be booted.</p>
+
+                <p>Doubleclick the <strong>rpi_start.bat</strong> file. The Raspbian Linux should start. When fully booted, a config screen with blue background should be visible. Do the following:</p>
+
+                <ol>
+                  <li>Change password;</li>
+                  <li>Enable SSH;</li>
+                  <li>And maybe overclock a bit.</li>
+                </ol>
+
+                <p>Exit the config tool by selecting <strong>Finish</strong> (navigate by using the Tab key), later you will be able to access the tool by issuing the <strong>sudo raspi-config</strong> command.</p>
+
+                <p>If the system shuts down, click on the <strong>rpi_start.bat</strong> file again to restart the emulator.</p>
+
+                <p>Now the image should be ready for burning on the SD card. To do that use <a href="https://www.sdcard.org/downloads/formatter_3/eula_windows">SDFormatter</a> to format the SD card and <a href="http://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a> to burn the image file on to the SD card.</p>
+
+                <p>Note that you have to select the ON option in the Format Size Adjustment select box in the <strong>SDFormatter</strong> application before you do the formatting. Be careful with selecting the correct drive letter as well.</p>
               </div>
 
               <p class="mac">Download <a href="http://sourceforge.net/projects/osxfuse/files/">OSXFUSE</a>. When installing, check the Compatibility Layer with MACFUSE (old version of OSXFUSE) option.</p>
@@ -173,23 +227,24 @@ sudo apt-get install git</pre></code>
 
               <pre><code>sudo update-rc.d ssh defaults</pre></code>
 
-              <p>Then, as we will connect directly the Pi to our computer through a network cable, we need to configure a network. We will assign our Pi a static IP address, so we can find it from our laptop. For this open the file <b>/etc/network/interfaces</b> :</p>
+              <p>Then, as we will connect directly the Pi to our computer through a network cable, we need to configure a network. We will assign our Pi a static IP address, so we can find it from our laptop. For this open the file <b>/etc/network/interfaces</b> in the nano text editor:</p>
 
-              <pre><code>sudo nano /etc/network/interfaces</code></pre>
+                <pre><code>sudo nano /etc/network/interfaces</code></pre>
 
-              <p>Replace its contents with the following :</p>
+                <p>Replace the contents of it with the following:</p>
 
-              <pre><code>auto lo
+                <pre><code>auto lo
 iface lo inet loopback
 auto eth0
 iface eth0 inet static
 
-address 100.100.100.2  
-gateway 100.100.100.1
-netmask 255.255.255.0
-</code></pre>
+address 192.168.0.210   # your IP  
+gateway 192.168.0.1     # IP of the Router
+netmask 255.255.255.0   # Network mask</code></pre>
 
-              <p>Save and close the file. The IP address of your Pi is now <b>100.100.100.2</b></p>
+                <p>Press <strong>Ctrl+X</strong> to save and exit. The program will prompt you whether you want to save chenges - enter 'y' for 'yes' and hit Enter. Run the following command to shutdown:</p>
+
+                <pre><code>sudo halt</code></pre>
 
               <p class="references">
                 References
