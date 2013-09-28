@@ -58,7 +58,7 @@
               <p>First, download a clean <b>raspbian</b> image from the official RPI site <a href="http://www.raspberrypi.org/downloads">http://www.raspberrypi.org/downloads</a>. Then, unzip it.</p>
             </div>
           </div>
-        </div>
+        </div> <!-- END panel -->
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -528,6 +528,37 @@ pd -send ";deviceNum 4" -nogui -audiooutdev 3 controllercheck.pd</code></pre>
             </div>
           </div>
         </div><!-- END panel -->
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#stepN2">
+                <span class="stepIndex">N2</span> Update and Upgrade
+              </a>
+            </h2>
+          </div>
+          <div id="stepN2" class="panel-collapse collapse">
+            <div class="panel-body">
+              
+              <p>When you have successfuly connected to your Pi the first time, you should run the config tool and expand the filesystem: </p>
+
+              <pre><code>sudo raspi-config</code></pre>
+
+              <p>Select the Expand Filesystem option. Go to Advanced Options and Select the Memory Split option. Type <b>128</b> and Hit <b>Ok</b>.</p>
+
+              <p>When done, select finish (by using Tab key on your keyboard and select <b>Yes</b> when prompted to reboot). The Pi will reboot and you will have to reconnect through SSH again.</p>
+
+              <p>Next - you should update and upgrade it. To do that, run the following commands:</p>
+
+              <pre><code>sudo apt-get clean
+sudo apt-get update
+sudo apt-get upgrade</code></pre>
+
+              <p>The updating and upgrading process will take some time so be patient.</p>
+
+            </div>
+          </div>
+        </div> <!-- END panel -->
 
       </div>
 
