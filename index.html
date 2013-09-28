@@ -129,56 +129,67 @@ exit</code></pre>
                 <p>Now the image should be ready for burning on the SD card. To do that use <a href="https://www.sdcard.org/downloads/formatter_3/eula_windows">SDFormatter</a> to format the SD card and <a href="http://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a> to burn the image file on to the SD card.</p>
 
                 <p>Note that you have to select the ON option in the Format Size Adjustment select box in the <strong>SDFormatter</strong> application before you do the formatting. Be careful with selecting the correct drive letter as well.</p>
-              </div>
+              </div> <!-- Qemu WIN -->
 
-              <p class="mac">Download <a href="http://sourceforge.net/projects/osxfuse/files/">OSXFUSE</a>. When installing, check the Compatibility Layer with MACFUSE (old version of OSXFUSE) option.</p>
+              <div class="ubuntu">
+                  <p>Now, do this to install QEMU:</p>
+                  <pre><code>sudo apt-get install qemu-system</code></pre>
+                  <p>Now, we need to launch it and run our image. First, execute:</p>
+                  <pre><code>file your-raspbian.img</code></pre>
 
-              <p class="mac">Download <a href="http://sourceforge.net/projects/fuse-ext2/">FUSE-EXT2</a> binary. Install it and unmount the OSXFUSE and FUSE-EXT2 installation drives.</p>
-
-              <p class="mac">Edit the FUSE-EXT2 auto mount script for read-write mounting. Open <b>/System/Library/Filesystems/fuse-ext2.fs/fuse-ext2.util</b> and around line 207 (in function Mount ()) you will find the line</p>
-              <pre class="mac"><code>OPTIONS="auto_xattr,defer_permissions"</code></pre>
-              <p class="mac">Change that line to:</p>
-              <pre class="mac"><code>OPTIONS="auto_xattr,defer_permissions,rw+"</code></pre>
-              <p class="mac">Save file, restart Terminal and navigate to your RPi workshop directory. Run:</p>
-              <pre class="mac"><code>sudo hdiutil mount your-rpi-image.img</code></pre>
-              <p class="mac">You should see something like this:</p>
-              <pre class="mac"><code>/dev/disk1         FDisk_partition_scheme          
-/dev/disk1s1        Windows_FAT_32        /Volumes/boot
-/dev/disk1s2        Linux                 /Volumes/Untitled</code></pre>
-              <p class="mac">Navigate to the mounted Linux partition:</p>
-              <pre class="mac"><code>cd /Volumes/Untitled</code></pre>
-              <p class="mac">Run:</p>
-              <pre class="mac"><code>sudo nano etc/ld.so.preload</code></pre>
-              <p class="mac">Comment out the only line there so it looks like this:</p>
-              <pre class=""><code>#/usr/lib/arm-linux-gnueabihf/libcofi_rpi.so</code></pre>
-              <p class="">Press Ctrl+X <span class="mac">(Not Cmd+X) </span>to save file and exit.</p>
-
-              <p class="mac">Before installing QEMU, make sure that you have <a href="http://www.macports.org">MACPORTS</a>. MACPORTS depend on XCode Command Line Tools that depend on XCode. To get XCode, go to <a href="https://developer.apple.com">Apple Developer</a> website or use App Store application. XCode Command Line tools are only available through Apple Developer website.</p>
-
-              <p>Now, do this to install QEMU:</p>
-
-              <pre class="ubuntu"><code>sudo apt-get install qemu-system</code></pre>
-              <pre class="mac"><code>sudo port install qemu +target_arm</code></pre>
-
-              <p class="ubuntu">Now, we need to launch it and run our image. First, execute:</p>
-              <pre class="ubuntu"><code>file your-raspbian.img</code></pre>
-
-              <p class="ubuntu">From the output of this command, take the partition 2 'startsector' value and multiply by 512, and use this figure as the offset value in the mount command below.</p>
-              <pre class="ubuntu"><code>sudo mount your-raspbian.img -o offset=62914560 /mnt
+                  <p>From the output of this command, take the partition 2 'startsector' value and multiply by 512, and use this figure as the offset value in the mount command below.</p>
+                  <pre><code>sudo mount your-raspbian.img -o offset=62914560 /mnt
 nano /mnt/etc/ld.so.preload
 </code></pre>
-                
-              <p class="ubuntu">Comment out the line in the file and save. Then unmount the image.</p>
-              <pre class="ubuntu"><code>sudo umount your-raspbian.img</code></pre>
+                  
+                  <p>Press Ctrl+X to save file and exit. Then unmount the image.</p>
+                  <pre><code>sudo umount your-raspbian.img</code></pre>
 
-              <p>Make sure that you are in workshop working directory, then, you can start QEMU with your image:</p>
-              <pre class=""><code><span class="mac">sudo </span>qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
+                  <p>Make sure that you are in workshop working directory, then, you can start QEMU with your image:</p>
+                  <pre><code>qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
 
-              <p class="ubuntu">If it says that running fsck failed, just run</p>
-              <pre class="ubuntu"><code>fsck /dev/sda2</code></pre>
-              <p class="ubuntu">and restart the emulator when done.</p>
+                  <p>If it says that running fsck failed, just run</p>
+                  <pre><code>fsck /dev/sda2</code></pre>
+                  <p>and restart the emulator when done.</p>
 
-              <p>Because this is the first time we start the image on a machine, you will be prompted with a menu allowing you to configure some options. Don't forget to change your password, and to change the keyboard layout.</p>
+                  <p>Because this is the first time we start the image on a machine, you will be prompted with a menu allowing you to configure some options. Don't forget to change your password, and to change the keyboard layout.</p>
+              </div> <!-- Qemu UBUNTU -->
+
+              <div class="mac">
+              <p>Download <a href="http://sourceforge.net/projects/osxfuse/files/">OSXFUSE</a>. When installing, check the Compatibility Layer with MACFUSE (old version of OSXFUSE) option.</p>
+
+              <p>Download <a href="http://sourceforge.net/projects/fuse-ext2/">FUSE-EXT2</a> binary. Install it and unmount the OSXFUSE and FUSE-EXT2 installation drives.</p>
+
+              <p>Edit the FUSE-EXT2 auto mount script for read-write mounting. Open <b>/System/Library/Filesystems/fuse-ext2.fs/fuse-ext2.util</b> and around line 207 (in function Mount ()) you will find the line</p>
+              <pre><code>OPTIONS="auto_xattr,defer_permissions"</code></pre>
+              <p>Change that line to:</p>
+              <pre><code>OPTIONS="auto_xattr,defer_permissions,rw+"</code></pre>
+              <p>Save file, restart Terminal and navigate to your RPi workshop directory. Run:</p>
+              <pre><code>sudo hdiutil mount your-rpi-image.img</code></pre>
+              <p>You should see something like this:</p>
+              <pre><code>/dev/disk1         FDisk_partition_scheme          
+/dev/disk1s1        Windows_FAT_32        /Volumes/boot
+/dev/disk1s2        Linux                 /Volumes/Untitled</code></pre>
+              <p>Navigate to the mounted Linux partition:</p>
+              <pre><code>cd /Volumes/Untitled</code></pre>
+              <p>Run:</p>
+              <pre><code>sudo nano etc/ld.so.preload</code></pre>
+              <p>Comment out the only line there so it looks like this:</p>
+              <pre><code>#/usr/lib/arm-linux-gnueabihf/libcofi_rpi.so</code></pre>
+              <p>Press Ctrl+X (Not Cmd+X) to save file and exit.</p>
+
+              <p>Before installing QEMU, make sure that you have <a href="http://www.macports.org">MACPORTS</a>. MACPORTS depend on XCode Command Line Tools that depend on XCode. To get XCode, go to <a href="https://developer.apple.com">Apple Developer</a> website or use App Store application. XCode Command Line tools are only available through Apple Developer website.</p>
+                <p>Now, do this to install QEMU:</p>
+
+                  <pre><code>sudo port install qemu +target_arm</code></pre>
+
+                 <p>Make sure that you are in workshop working directory, then, you can start QEMU with your image:</p>
+                  <pre><code>sudo qemu-system-arm -kernel your-linux-kernel -cpu arm1176 -m 256 -M versatilepb -no-reboot -serial stdio -append "root=/dev/sda2 panic=1" -hda your-raspbian.img -redir tcp:5022::22</code></pre>
+
+                  <p>Because this is the first time we start the image on a machine, you will be prompted with a menu allowing you to configure some options. Don't forget to change your password, and to change the keyboard layout.</p>
+              </div> <!-- Qemu MAC -->
+
+              
 
               <p class="references">
                 References
