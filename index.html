@@ -126,9 +126,6 @@ exit</code></pre>
 
                 <p>If the system shuts down, click on the <strong>rpi_start.bat</strong> file again to restart the emulator.</p>
 
-                <p>Now the image should be ready for burning on the SD card. To do that use <a href="https://www.sdcard.org/downloads/formatter_3/eula_windows">SDFormatter</a> to format the SD card and <a href="http://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a> to burn the image file on to the SD card.</p>
-
-                <p>Note that you have to select the ON option in the Format Size Adjustment select box in the <strong>SDFormatter</strong> application before you do the formatting. Be careful with selecting the correct drive letter as well.</p>
               </div> <!-- Qemu WIN -->
 
               <div class="ubuntu">
@@ -306,6 +303,7 @@ netmask 255.255.255.0   # Network mask</code></pre>
           <div id="step6" class="panel-collapse collapse">
             <div class="panel-body">
 
+              <div class="ubuntu">
               <p>The first thing we need to do is format the SD card to FAT32 (beware, this will erase all your data). <span class="ubuntu">For this, just open the disk utilities, find your SD card there, remove all existing partitions, and create a new one. When this is done, eject the card from the reader.</span></p> 
 
               <p>Now, you need to find the name of your SD card on your computer. But, don't insert the card yet and run :</p> 
@@ -316,11 +314,67 @@ netmask 255.255.255.0   # Network mask</code></pre>
               <p>Finally, let's install the image to the SD card. Now be very careful. You need to input the right device name or you might lose all the data on your computer (no joke).</p>
               <pre><code>dd bs=1m if=your-raspbian.img of=/dev/your-device-name</code></pre>
               <p>This should take a couple of minutes, so be patient even if nothing seems to happen.</p>
+              </div><!-- SD Setup UBUNTU -->
 
-              <p class="references">
+              <div class="mac">
+                <p>Use <a href="https://www.sdcard.org/downloads/formatter_4">SDFormatter</a> to format the SD card. Select the <strong>Overwrite Format</strong> option before pressing <strong>Format</strong>.</p>
+
+                <p>Open Terminal, navigate to your working directory by using the <strong>cd</strong> command and run the following command:</p>
+
+                <pre><code>diskutil list</code></pre>
+
+                <p>You should see something like this:</p>
+
+                <pre><code>/dev/disk0
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *256.1 GB   disk0
+   1:                        EFI                         209.7 MB   disk0s1
+   2:                  Apple_HFS Macintosh HD            255.2 GB   disk0s2
+   3:                 Apple_Boot Recovery HD             650.0 MB   disk0s3
+/dev/disk1
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *7.9 GB     disk1
+   1:             Windows_FAT_32 boot                    58.7 MB    disk1s1</code></pre>
+
+                <p>We are interested in the <strong>/dev/disk1</strong> part - unmount it by unmounting it's partition. Enter this command in the Terminal window:</p>
+
+                <pre><code>diskutil unmount /dev/disk1s1</code></pre>
+
+                <p>Now the SD card is ready, remember the device path <strong>/dev/disk1</strong> - you will need to add an 'r' before the disk1 part - it should increase the writing speed. Run the following command, <strong style="color:red;">but be careful</strong> as you can overwrite the whole contents of your hard drive just by missing out some letters:</p>
+
+                <pre><code>dd bs=1m if=<strong>your-raspbian.img</strong> of=/dev/rdisk1</code></pre>
+
+                <p>Note: replace the <strong>your-raspbian.img</strong> part with the actual name of your image file.</p>
+
+                <p>Now wait. It can take a couple of minutes for the computer to finish the task. Yes - there is no indicator that shows the progress, but you can open Activity Monitor to see that there is something happening if you start becomming inpatient.</p>
+
+                <p>When the installing is finished, place the SD card in your Raspberry Pi and start it up.</p>
+              </div><!-- SD Setup MAC -->
+
+              <div class="win">
+                <p>Now the image should be ready for burning on the SD card. To do that use <a href="https://www.sdcard.org/downloads/formatter_3/eula_windows">SDFormatter</a> to format the SD card and <a href="http://sourceforge.net/projects/win32diskimager/">Win32DiskImager</a> to burn the image file on to the SD card.</p>
+
+                <p>Note that you have to select the <strong>ON</strong> option in the Format Size Adjustment select box in the <strong>SDFormatter</strong> application options before you do the formatting. Be careful with selecting the correct drive letter as well.</p>
+
+                <p>The <strong>WinDiskImager</strong> application should be self-explainatory. Just select the Raspbian image file and the SD card drive and press <strong>Write</strong></p>
+              </div> <!-- SD Setup WIN -->
+
+              <p class="references ubuntu">
                 Reference
 
                 <a href="http://elinux.org/RPi_Easy_SD_Card_Setup">http://elinux.org/RPi_Easy_SD_Card_Setup</a>
+              </p>
+
+              <p class="references mac">
+                Reference
+
+                <a href="http://www.raspberrypi.org">http://www.raspberrypi.org</a>
+              </p>
+
+              <p class="references win">
+                Reference
+
+                <a href="http://www.raspberrypi.org">http://www.raspberrypi.org</a>
               </p>
             </div>
           </div>
